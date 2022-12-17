@@ -53,5 +53,4 @@ jobs:
       run: |
         cd "StringId64"
         clang main.c
-        strings a.out
         ./a.out "Hello World"
