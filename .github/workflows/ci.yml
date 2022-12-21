@@ -1,0 +1,56 @@
+name: CI
+
+on: [ push, pull_request ]
+
+jobs:
+  build-win32:
+    runs-on: windows-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build and test CRC32 generation
+      run: |
+        cd "StringId32/Uncharted"
+        gcc main.c -m64 -static -D__WIN32__ -o UC.exe
+        ./UC.exe "Hello World"
+        cd "../Uncharted Golden Abyss"
+        gcc main.c -m64 -static -D__WIN32__ -o UCGA.exe
+        ./UCGA.exe "Hello World"
+
+    - name: Build and test FNV-1a generation
+      run: |
+        cd "StringId64"
+        gcc main.c -m64 -static -D__WIN32__ -o t2.exe
+        ./t2.exe "Hello World"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: win64-bin
+        path: |
+          StringId32/**/*.exe
+          StringId64/*.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build and test CRC32 generation
+      run: |
+        cd "StringId32/Uncharted"
+        clang main.c
+        ./a.out "Hello World"
+        cd "../Uncharted Golden Abyss"
+        clang main.c
+        ./a.out "Hello World"
+
+    - name: Build and test FNV-1a generation
+      run: |
+        cd "StringId64"
+        clang main.c
+        ./a.out "Hello World"
