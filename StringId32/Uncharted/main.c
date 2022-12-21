@@ -68,9 +68,18 @@ const U32 StringIdHash(const char* str)
 
 int main(int argc, const char* Argv[])
 {
-	for( int i = 1; i < argc; i++)
+	puts("========= StringId (CRC32) generator by icemesh =========");
+	if(argc <= 0x1)
 	{
-		printf("0x%08X: %s\n", StringIdHash(Argv[i]), Argv[i] );
+		printf("%s usage: input_text ... \n", Argv[0] );
+		return 1;
+	}
+	else
+	{
+		for( int i = 1; i < argc; i++)
+		{
+			printf("%s -> 0x%08X\n", Argv[i], StringIdHash(Argv[i]) );
+		}
 	}
 	return 0;
 }
