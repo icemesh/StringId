@@ -9,7 +9,6 @@
 typedef unsigned int      U32;
 
 const U32 StringIdHash(const char* str);
-const U32 StringIdHashConcat(U32 base, const char* str);
 
 U32 g_crc32Table[] = {
 0x00000000, 0x04C11DB7, 0x09823B6E, 0x0D4326D9, 0x130476DC, 0x17C56B6B, 
@@ -56,14 +55,15 @@ U32 g_crc32Table[] = {
 0x933EB0BB, 0x97FFAD0C, 0xAFB010B1, 0xAB710D06, 0xA6322BDF, 0xA2F33668, 
 0xBCB4666D, 0xB8757BDA, 0xB5365D03, 0xB1F740B4 };
 
-const U32 StringIdHashConcat(U32 base, const char* str)
-{
-  return (*str) ? StringIdHashConcat(g_crc32Table[(base >> 24) ^ *str] ^ (base << 0x8), str+1) : base;  
-}
-
 const U32 StringIdHash(const char* str)
 {
-  return (str && *str) ? StringIdHashConcat(0, str) : -1;
+	U32 base = 0;
+	while (*str)
+	{
+		base = g_crc32Table[(base >> 0x18) ^ *str] ^ (base << 0x8);
+		++str;
+	}
+	return base ? base : -1;
 }
 
 int main(int argc, const char* Argv[])
